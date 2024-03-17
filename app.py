@@ -2,7 +2,7 @@ import streamlit as st
 import numpy as np
 from scipy import stats
 
-def ab_test(control_visitors, control_conversions, treatment_visitors, treatment_conversions, confidence_level=0.95):
+def ab_test(control_visitors, control_conversions, treatment_visitors, treatment_conversions, confidence_level):
   """
   Performs an A/B test and returns the result.
 
@@ -27,11 +27,6 @@ def ab_test(control_visitors, control_conversions, treatment_visitors, treatment
   # Calculate the standard error for the difference in conversion rates.
   se = np.sqrt(control_rate * (1 - control_rate) / control_visitors + treatment_rate * (1 - treatment_rate) / treatment_visitors)
 
-  # Select confidence level from user input
-  confidence_options = {"90%": 0.9, "95%": 0.95, "99%": 0.99}
-  selected_confidence = st.selectbox("Confidence Level", list(confidence_options.keys()))
-  confidence_level = confidence_options[selected_confidence]
-
   # Calculate the margin of error.
   margin_error = se * stats.norm.ppf((1 + confidence_level) / 2)
 
@@ -54,6 +49,10 @@ control_visitors = st.number_input("Control Visitors", min_value=0)
 control_conversions = st.number_input("Control Conversions", min_value=0)
 treatment_visitors = st.number_input("Treatment Visitors", min_value=0)
 treatment_conversions = st.number_input("Treatment Conversions", min_value=0)
+# Select confidence level from user input
+confidence_options = {"90%": 0.9, "95%": 0.95, "99%": 0.99}
+selected_confidence = st.selectbox("Confidence Level", list(confidence_options.keys()))
+confidence_level = confidence_options[selected_confidence]
 
 # Button to trigger the test
 if st.button("Run A/B Test"):
